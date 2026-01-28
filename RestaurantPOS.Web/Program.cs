@@ -4,6 +4,7 @@ using RestaurantPOS.Repository.Interfaces;
 using RestaurantPOS.Repository.Implementation;
 using RestaurantPOS.Service.Interfaces;
 using RestaurantPOS.Service.Implementation;
+using RestaurantPOS.Web.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,12 @@ builder.Services.AddHttpClient<IExternalMealService, ExternalMealService>();
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await DbSeeder.SeedAsync(db);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

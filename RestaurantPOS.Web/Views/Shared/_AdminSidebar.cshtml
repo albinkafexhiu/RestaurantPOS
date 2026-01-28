@@ -1,0 +1,71 @@
+@{
+    string ctrl = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "").ToLower();
+    Func<string, string> active = (name) => ctrl == name.ToLower() ? "active" : "";
+}
+
+<ul class="navbar-nav pt-lg-3">
+    <li class="nav-item @active("home")">
+        <a class="nav-link" asp-controller="Home" asp-action="Index">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="ti ti-home"></i>
+            </span>
+            <span class="nav-link-title">Dashboard</span>
+        </a>
+    </li>
+
+    <li class="nav-item @active("products")">
+        <a class="nav-link" asp-controller="Products" asp-action="Index">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="ti ti-burger"></i>
+            </span>
+            <span class="nav-link-title">Products</span>
+        </a>
+    </li>
+
+    <li class="nav-item @active("productcategories")">
+        <a class="nav-link" asp-controller="ProductCategories" asp-action="Index">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="ti ti-category"></i>
+            </span>
+            <span class="nav-link-title">Categories</span>
+        </a>
+    </li>
+
+    <li class="nav-item @active("tables")">
+        <a class="nav-link" asp-controller="Tables" asp-action="Index">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="ti ti-layout-grid"></i>
+            </span>
+            <span class="nav-link-title">Tables</span>
+        </a>
+    </li>
+
+    <li class="nav-item @active("waiters")">
+        <a class="nav-link" asp-controller="Waiters" asp-action="Index">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="ti ti-user"></i>
+            </span>
+            <span class="nav-link-title">Waiters</span>
+        </a>
+    </li>
+
+    <li class="nav-item @active("expenses")">
+        <a class="nav-link" asp-controller="Expenses" asp-action="Index">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="ti ti-receipt"></i>
+            </span>
+            <span class="nav-link-title">Expenses</span>
+        </a>
+    </li>
+
+    <li class="nav-item @active("meals")">
+        <a class="nav-link" asp-controller="Meals" asp-action="Index">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <i class="ti ti-api"></i>
+            </span>
+            <span class="nav-link-title">Meals Import (API)</span>
+        </a>
+    </li>
+
+    <!-- Reports will be added later -->
+</ul>

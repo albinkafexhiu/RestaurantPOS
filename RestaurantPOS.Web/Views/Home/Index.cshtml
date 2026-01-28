@@ -2,13 +2,102 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<h2>Restaurant POS</h2>
-<p>Use the navigation bar to manage the system.</p>
+<div class="page-header d-print-none">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Restaurant POS</h2>
+            <div class="text-muted">Admin area</div>
+        </div>
+    </div>
+</div>
 
-<ul>
-    <li><a asp-controller="ProductCategories" asp-action="Index">Manage Categories</a></li>
-    <li><a asp-controller="Products" asp-action="Index">Manage Products</a></li>
-    <li><a asp-controller="Tables" asp-action="Index">Manage Tables</a></li>
-    <li><a asp-controller="Waiters" asp-action="Index">Manage Waiters</a></li>
-    <li><a asp-controller="Expenses" asp-action="Index">Manage Expenses</a></li>
-</ul>
+<div class="row row-cards">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <span class="avatar me-3"><i class="ti ti-burger"></i></span>
+                    <div>
+                        <div class="fw-bold">Products</div>
+                        <div class="text-muted">Manage menu items</div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-primary w-100">Open</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <span class="avatar me-3"><i class="ti ti-category"></i></span>
+                    <div>
+                        <div class="fw-bold">Categories</div>
+                        <div class="text-muted">Organize products</div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a asp-controller="ProductCategories" asp-action="Index" class="btn btn-primary w-100">Open</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <span class="avatar me-3"><i class="ti ti-layout-grid"></i></span>
+                    <div>
+                        <div class="fw-bold">POS</div>
+                        <div class="text-muted">Tables and orders</div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a asp-controller="Pos" asp-action="Index" class="btn btn-success w-100">Open POS</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards mt-3">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="fw-bold">Waiters</div>
+                <div class="text-muted">PIN users</div>
+                <div class="mt-3">
+                    <a asp-controller="Waiters" asp-action="Index" class="btn btn-outline-primary w-100">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="fw-bold">Tables</div>
+                <div class="text-muted">Restaurant tables</div>
+                <div class="mt-3">
+                    <a asp-controller="Tables" asp-action="Index" class="btn btn-outline-primary w-100">Manage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="fw-bold">Meals Import (API)</div>
+                <div class="text-muted">Get external meal suggestions</div>
+                <div class="mt-3">
+                    <a asp-controller="Meals" asp-action="Index" class="btn btn-outline-primary w-100">Open</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
