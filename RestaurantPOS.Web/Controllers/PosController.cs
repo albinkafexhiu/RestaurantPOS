@@ -5,6 +5,7 @@ using RestaurantPOS.Domain.Enums;
 using RestaurantPOS.Service.Interfaces;
 using RestaurantPOS.Web.Models;
 using RestaurantPOS.Web.Infrastructure;
+using System.Text;
 
 
 namespace RestaurantPOS.Web.Controllers
@@ -90,13 +91,66 @@ namespace RestaurantPOS.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CloseOrder(Guid tableId, Guid orderId, PaymentMethod paymentMethod)
         {
-            if (orderId != Guid.Empty)
+            if (orderId == Guid.Empty)
+                return RedirectToAction("Index");
+
+            _orderService.CloseOrder(orderId, paymentMethod);
+
+            // auto-download receipt after closing
+            return RedirectToAction("ReceiptTxt", new { tableId = tableId, orderId = orderId });
+        }
+
+        
+        [HttpGet]
+        public IActionResult ReceiptTxt(Guid tableId, Guid orderId)
+        {
+            if (orderId == Guid.Empty)
+                return RedirectToAction("Table", new { id = tableId });
+
+            var order = _orderService.GetById(orderId);
+            if (order == null)
+                return RedirectToAction("Table", new { id = tableId });
+
+            var table = _tableService.GetById(tableId);
+            var waiter = _waiterService.GetById(order.WaiterId);
+
+            var products = _productService.GetAll().ToList();
+            var items = _orderService.GetItemsForOrder(orderId).ToList();
+
+            var sb = new StringBuilder();
+
+            sb.AppendLine("RestaurantPOS Receipt");
+            sb.AppendLine("--------------------------------");
+            sb.AppendLine($"Table: {(table != null ? table.TableNumber.ToString() : "N/A")}");
+            sb.AppendLine($"Waiter: {waiter?.FullName ?? "N/A"}");
+            sb.AppendLine($"Opened: {order.OpenedAt:yyyy-MM-dd HH:mm}");
+            if (order.ClosedAt.HasValue)
+                sb.AppendLine($"Closed: {order.ClosedAt.Value:yyyy-MM-dd HH:mm}");
+            sb.AppendLine($"Status: {order.Status}");
+            sb.AppendLine($"Payment: {order.PaymentMethod}");
+            sb.AppendLine("--------------------------------");
+
+            decimal total = 0;
+
+            foreach (var it in items)
             {
-                _orderService.CloseOrder(orderId, paymentMethod);
+                var productName = products.FirstOrDefault(p => p.Id == it.ProductId)?.Name ?? "Unknown";
+                total += it.LineTotal;
+
+                sb.AppendLine($"{productName}");
+                sb.AppendLine($"  {it.Quantity} x {it.UnitPrice:0.00} = {it.LineTotal:0.00}");
             }
 
-            return RedirectToAction("Index");
+            sb.AppendLine("--------------------------------");
+            sb.AppendLine($"TOTAL: {total:0.00}");
+            sb.AppendLine("--------------------------------");
+
+            var bytes = Encoding.UTF8.GetBytes(sb.ToString());
+            var fileName = $"receipt_table_{(table?.TableNumber.ToString() ?? "NA")}_{DateTime.Now:yyyyMMdd_HHmm}.txt";
+
+            return File(bytes, "text/plain", fileName);
         }
+
 
         private OrderDetailsViewModel BuildOrderViewModel(RestaurantTable table)
         {

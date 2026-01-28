@@ -2,122 +2,233 @@
 @using RestaurantPOS.Domain.Enums
 
 @{
-    ViewData["Title"] = $"Table {Model.TableNumber} - POS";
+    ViewData["Title"] = $"Table {Model.TableNumber}";
+    Layout = "_PosLayout";
 }
 
-<h2>Table @Model.TableNumber - POS</h2>
+<div class="page-header d-print-none">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Table @Model.TableNumber</h2>
+            <div class="text-muted">POS</div>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="ti ti-arrow-left"></i>
+                Back to tables
+            </a>
+        </div>
+    </div>
+</div>
 
 @if (!Model.HasOpenOrder)
 {
-    <h4>No open order for this table.</h4>
-    <p>Select waiter and start a new order.</p>
+    <div class="row">
+        <div class="col-lg-6 col-xl-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Start order</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-muted mb-3">
+                        No open order for this table. Select a waiter and start a new order.
+                    </div>
 
-    <form asp-action="StartOrder" method="post">
-        <input type="hidden" name="tableId" value="@Model.TableId" />
+                    <form asp-action="StartOrder" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="tableId" value="@Model.TableId" />
 
-        <div class="form-group">
-            <label>Waiter</label>
-            <select name="waiterId" class="form-control">
-                <option value="">-- select waiter --</option>
-                @foreach (var w in Model.Waiters)
-                {
-                    <option value="@w.Value">@w.Text</option>
-                }
-            </select>
+                        <div class="mb-3">
+                            <label class="form-label">Waiter</label>
+                            <select name="waiterId" class="form-select">
+                                <option value="">-- select waiter --</option>
+                                @foreach (var w in Model.Waiters)
+                                {
+                                    <option value="@w.Value">@w.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="ti ti-playstation-circle"></i>
+                            Start Order
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-primary mt-2">Start Order</button>
-        <a asp-action="Index" class="btn btn-secondary mt-2">Back to tables</a>
-    </form>
+    </div>
 }
 else
 {
-    <div class="row">
-        <div class="col-md-7">
-            <h4>Items</h4>
-
-            @if (Model.Items.Any())
-            {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Qty</th>
-                            <th>Unit price</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var item in Model.Items)
-                    {
-                        <tr>
-                            <td>@item.ProductName</td>
-                            <td>@item.Quantity</td>
-                            <td>@item.UnitPrice</td>
-                            <td>@item.LineTotal</td>
-                            <td>
-                                <form asp-action="RemoveItem" method="post" style="display:inline">
-                                    <input type="hidden" name="tableId" value="@Model.TableId" />
-                                    <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
-                                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>No items in this order yet.</p>
-            }
-
-            <h4>Total: @Model.Total</h4>
-
-            <form asp-action="CloseOrder" method="post" class="mt-3">
-                <input type="hidden" name="tableId" value="@Model.TableId" />
-                <input type="hidden" name="orderId" value="@Model.OrderId" />
-
-                <div class="form-group">
-                    <label>Payment method</label>
-                    <select name="paymentMethod" class="form-control">
-                        <option value="@PaymentMethod.Cash">Cash</option>
-                        <option value="@PaymentMethod.Card">Card</option>
-                        <option value="@PaymentMethod.Other">Other</option>
-                    </select>
+    <div class="row g-3">
+        <!-- LEFT: PRODUCTS -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Products</h3>
+                    <div class="ms-auto text-muted small">Tap to add</div>
                 </div>
 
-                <button type="submit" class="btn btn-success mt-2">Close Order</button>
-                <a asp-action="Index" class="btn btn-secondary mt-2">Back to tables</a>
-            </form>
-        </div>
-
-        <div class="col-md-5">
-            <h4>Add Item</h4>
-
-            <form asp-action="AddItem" method="post">
-                <input type="hidden" name="tableId" value="@Model.TableId" />
-                <input type="hidden" name="orderId" value="@Model.OrderId" />
-
-                <div class="form-group">
-                    <label>Product</label>
-                    <select name="productId" class="form-control">
-                        <option value="">-- select product --</option>
+                <div class="card-body">
+                    <div class="row g-2" id="productsGrid">
                         @foreach (var p in Model.Products)
                         {
-                            <option value="@p.Id">@p.Name (@p.Price)</option>
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <form asp-action="AddItem" method="post" class="h-100">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="tableId" value="@Model.TableId" />
+                                    <input type="hidden" name="orderId" value="@Model.OrderId" />
+                                    <input type="hidden" name="productId" value="@p.Id" />
+                                    <input type="hidden" name="quantity" value="1" />
+
+                                    <button type="submit" class="card card-sm h-100 w-100 btn btn-light">
+                                        <div class="card-body text-center">
+                                            <div class="fw-bold text-truncate">@p.Name</div>
+                                            <div class="text-muted small">@p.Price</div>
+                                        </div>
+                                    </button>
+                                </form>
+                            </div>
                         }
-                    </select>
-                </div>
+                    </div>
 
-                <div class="form-group">
-                    <label>Quantity</label>
-                    <input type="number" name="quantity" value="1" min="1" class="form-control" />
-                </div>
+                    <hr class="my-3" />
 
-                <button type="submit" class="btn btn-primary mt-2">Add to order</button>
-            </form>
+                    <!-- Optional: manual add with quantity (keeps your old capability) -->
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-7">
+                            <label class="form-label">Add with quantity</label>
+                            <select id="productSelect" class="form-select">
+                                <option value="">-- select product --</option>
+                                @foreach (var p in Model.Products)
+                                {
+                                    <option value="@p.Id">@p.Name (@p.Price)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Qty</label>
+                            <input id="qtyInput" type="number" value="1" min="1" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <form asp-action="AddItem" method="post" id="manualAddForm">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="tableId" value="@Model.TableId" />
+                                <input type="hidden" name="orderId" value="@Model.OrderId" />
+                                <input type="hidden" name="productId" id="manualProductId" />
+                                <input type="hidden" name="quantity" id="manualQty" />
+
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Add
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
+
+        <!-- RIGHT: RECEIPT -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Receipt</h3>
+                </div>
+
+                <div class="card-body">
+                    @if (Model.Items.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var item in Model.Items)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="me-2">
+                                            <div class="fw-bold">@item.ProductName</div>
+                                            <div class="text-muted small">
+                                                @item.Quantity × @item.UnitPrice
+                                            </div>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <div class="fw-bold">@item.LineTotal</div>
+                                            <form asp-action="RemoveItem" method="post" class="mt-1">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="tableId" value="@Model.TableId" />
+                                                <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-muted">No items in this order yet.</div>
+                    }
+                </div>
+
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="text-muted">Total</div>
+                        <div class="h3 m-0">@Model.Total</div>
+                    </div>
+
+                    
+                    <form asp-action="CloseOrder" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="tableId" value="@Model.TableId" />
+                        <input type="hidden" name="orderId" value="@Model.OrderId" />
+
+                        <div class="mb-2">
+                            <label class="form-label">Payment method</label>
+                            <select name="paymentMethod" class="form-select">
+                                <option value="@PaymentMethod.Cash">Cash</option>
+                                <option value="@PaymentMethod.Card">Card</option>
+                                <option value="@PaymentMethod.Other">Other</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="ti ti-check"></i>
+                            Close Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
+}
+
+@section Scripts {
+<script>
+    // Manual add form wiring
+    const productSelect = document.getElementById("productSelect");
+    const qtyInput = document.getElementById("qtyInput");
+    const manualProductId = document.getElementById("manualProductId");
+    const manualQty = document.getElementById("manualQty");
+    const manualForm = document.getElementById("manualAddForm");
+
+    if (manualForm) {
+        manualForm.addEventListener("submit", function (e) {
+            const pid = productSelect.value;
+            const qty = qtyInput.value;
+
+            if (!pid) {
+                e.preventDefault();
+                return;
+            }
+
+            manualProductId.value = pid;
+            manualQty.value = qty && parseInt(qty) > 0 ? qty : 1;
+        });
+    }
+</script>
 }
