@@ -5,6 +5,7 @@
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Domain/obj/Debug/net10.0/RestaurantPOS.Domain.AssemblyInfoInputs.cache
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Domain/obj/Debug/net10.0/RestaurantPOS.Domain.AssemblyInfo.cs
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Domain/obj/Debug/net10.0/RestaurantPOS.Domain.csproj.CoreCompileInputs.cache
+/Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Domain/obj/Debug/net10.0/RestaurantPOS.Domain.sourcelink.json
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Domain/obj/Debug/net10.0/RestaurantPOS.Domain.dll
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Domain/obj/Debug/net10.0/refint/RestaurantPOS.Domain.dll
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Domain/obj/Debug/net10.0/RestaurantPOS.Domain.pdb

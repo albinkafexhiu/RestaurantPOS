@@ -10,6 +10,7 @@
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Service/obj/Debug/net10.0/RestaurantPOS.Service.AssemblyInfoInputs.cache
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Service/obj/Debug/net10.0/RestaurantPOS.Service.AssemblyInfo.cs
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Service/obj/Debug/net10.0/RestaurantPOS.Service.csproj.CoreCompileInputs.cache
+/Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Service/obj/Debug/net10.0/RestaurantPOS.Service.sourcelink.json
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Service/obj/Debug/net10.0/Restaura.C6822C9E.Up2Date
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Service/obj/Debug/net10.0/RestaurantPOS.Service.dll
 /Users/lali/RiderProjects/RestaurantPOS/RestaurantPOS.Service/obj/Debug/net10.0/refint/RestaurantPOS.Service.dll

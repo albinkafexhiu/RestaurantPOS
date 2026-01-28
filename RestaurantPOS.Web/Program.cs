@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantPOS.Repository.Data;
+using RestaurantPOS.Repository.Interfaces;
+using RestaurantPOS.Repository.Implementation;
+using RestaurantPOS.Service.Interfaces;
+using RestaurantPOS.Service.Implementation;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +16,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Repository registration
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+// services
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
+builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddScoped<IWaiterService, WaiterService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 
