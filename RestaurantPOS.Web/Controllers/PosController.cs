@@ -4,9 +4,12 @@ using RestaurantPOS.Domain.Entities;
 using RestaurantPOS.Domain.Enums;
 using RestaurantPOS.Service.Interfaces;
 using RestaurantPOS.Web.Models;
+using RestaurantPOS.Web.Infrastructure;
+
 
 namespace RestaurantPOS.Web.Controllers
 {
+    [PosAuthorize]
     public class PosController : Controller
     {
         private readonly ITableService _tableService;

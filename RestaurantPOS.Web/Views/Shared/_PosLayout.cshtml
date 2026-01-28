@@ -1,3 +1,6 @@
+@using RestaurantPOS.Web.Infrastructure
+
+
 @{
     var title = ViewData["Title"] as string ?? "POS";
 }
@@ -39,8 +42,11 @@
                 </div>
                 <div class="navbar-nav flex-row order-md-last">
                     <div class="nav-item">
-                        <span class="nav-link">Waiter</span>
+                        <span class="nav-link">
+                            @(Context.Session.GetString(SessionKeys.WaiterName) ?? "Waiter")
+                        </span>
                     </div>
+
                 </div>
             </div>
         </header>

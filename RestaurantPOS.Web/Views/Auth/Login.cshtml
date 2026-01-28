@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Waiter Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POS Login</title>
+
+    <link rel="stylesheet" href="~/lib/tabler/core/tabler.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/lib/tabler/icons/tabler-icons.min.css" asp-append-version="true">
+</head>
+<body class="d-flex flex-column">
+<div class="page page-center">
+    <div class="container container-tight py-4">
+        <div class="text-center mb-4">
+            <h1 class="navbar-brand navbar-brand-autodark">
+                <span class="fw-bold">RestaurantPOS</span>
+            </h1>
+            <div class="text-muted">Waiter PIN Login</div>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger" role="alert">@TempData["Error"]</div>
+        }
+
+        <div class="card card-md">
+            <div class="card-body">
+                <h2 class="h3 text-center mb-3">Enter PIN</h2>
+
+                <form asp-controller="Auth" asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label">PIN</label>
+                        <input name="pin" type="password" class="form-control" placeholder="****" autofocus />
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center text-muted mt-3">
+            Integrated Systems project
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/tabler/core/tabler.min.js" asp-append-version="true"></script>
+</body>
+</html>
