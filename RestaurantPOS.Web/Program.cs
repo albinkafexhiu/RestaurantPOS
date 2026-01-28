@@ -27,6 +27,10 @@ builder.Services.AddScoped<IWaiterService, WaiterService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
+// external meals API
+builder.Services.AddHttpClient<IExternalMealService, ExternalMealService>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -34,12 +34,23 @@ namespace RestaurantPOS.Service.Implementation
             return _orderRepository.Get(id);
         }
 
-        public Order OpenOrderForTable(Guid tableId, Guid waiterId)
+        public Order? GetOpenOrderForTable(Guid tableId)
         {
-            // check if there is already an open order for this table
-            var existingOpenOrder = _orderRepository
+            return _orderRepository
                 .GetAll()
                 .FirstOrDefault(o => o.RestaurantTableId == tableId && o.Status == OrderStatus.Open);
+        }
+
+        public IEnumerable<OrderItem> GetItemsForOrder(Guid orderId)
+        {
+            return _orderItemRepository
+                .GetAll()
+                .Where(oi => oi.OrderId == orderId);
+        }
+
+        public Order OpenOrderForTable(Guid tableId, Guid waiterId)
+        {
+            var existingOpenOrder = GetOpenOrderForTable(tableId);
 
             if (existingOpenOrder != null)
             {
@@ -59,7 +70,6 @@ namespace RestaurantPOS.Service.Implementation
 
             _orderRepository.Insert(order);
 
-            // mark table as occupied
             var table = _tableRepository.Get(tableId);
             if (table != null)
             {
@@ -123,12 +133,7 @@ namespace RestaurantPOS.Service.Implementation
                 return;
             }
 
-            // calculate total from items
-            var items = _orderItemRepository
-                .GetAll()
-                .Where(oi => oi.OrderId == orderId)
-                .ToList();
-
+            var items = GetItemsForOrder(orderId).ToList();
             var total = items.Sum(i => i.LineTotal);
 
             order.TotalAmount = total;
@@ -138,7 +143,6 @@ namespace RestaurantPOS.Service.Implementation
 
             _orderRepository.Update(order);
 
-            // free the table
             var table = _tableRepository.Get(order.RestaurantTableId);
             if (table != null)
             {

@@ -8,10 +8,13 @@ namespace RestaurantPOS.Service.Interfaces
         IEnumerable<Order> GetAll();
         Order? GetById(Guid id);
 
-        // POS-specific methods
         Order OpenOrderForTable(Guid tableId, Guid waiterId);
         void AddItem(Guid orderId, Guid productId, int quantity);
         void RemoveItem(Guid orderItemId);
         void CloseOrder(Guid orderId, PaymentMethod paymentMethod);
+
+        // New helpers for POS
+        Order? GetOpenOrderForTable(Guid tableId);
+        IEnumerable<OrderItem> GetItemsForOrder(Guid orderId);
     }
 }

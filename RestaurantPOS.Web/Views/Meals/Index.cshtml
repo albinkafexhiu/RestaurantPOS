@@ -1,0 +1,45 @@
+@model IEnumerable<RestaurantPOS.Domain.Dto.ExternalMealDto>
+
+@{
+    ViewData["Title"] = "External Meals";
+}
+
+<h2>External Meal Suggestions</h2>
+
+<p>This data is loaded from an external meals API and shown in a transformed format.</p>
+
+<div class="row">
+    @foreach (var meal in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>@meal.Name</h5>
+                    <p>
+                        <strong>Category:</strong> @meal.Category<br />
+                        <strong>Area:</strong> @meal.Area
+                    </p>
+                    @if (meal.Ingredients.Any())
+                    {
+                        <p>
+                            <strong>Ingredients:</strong>
+                            @string.Join(", ", meal.Ingredients)
+                        </p>
+                    }
+                    <p>
+                        <strong>Instructions:</strong><br />
+                        @meal.ShortInstructions
+                    </p>
+
+                    <a asp-controller="Products"
+                       asp-action="Create"
+                       asp-route-name="@meal.Name"
+                       asp-route-description="@meal.ShortInstructions"
+                       class="btn btn-sm btn-primary">
+                        Add as Product
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

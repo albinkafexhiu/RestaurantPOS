@@ -38,11 +38,25 @@ namespace RestaurantPOS.Web.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public IActionResult Create(string? name, string? description)
         {
             LoadCategories();
-            return View();
+
+            var model = new RestaurantPOS.Domain.Entities.Product();
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                model.Name = name;
+            }
+
+            if (!string.IsNullOrWhiteSpace(description))
+            {
+                model.Description = description;
+            }
+
+            return View(model);
         }
+
 
         // POST: Products/Create
         [HttpPost]

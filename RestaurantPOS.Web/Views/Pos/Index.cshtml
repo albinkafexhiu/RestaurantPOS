@@ -1,0 +1,22 @@
+@model IEnumerable<RestaurantPOS.Domain.Entities.RestaurantTable>
+
+@{
+    ViewData["Title"] = "POS - Tables";
+}
+
+<h2>POS - Tables</h2>
+
+<div class="row">
+    @foreach (var table in Model)
+    {
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Table @table.TableNumber</h5>
+                    <p>Status: @table.Status</p>
+                    <a asp-action="Table" asp-route-id="@table.Id" class="btn btn-primary btn-sm">Open</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
